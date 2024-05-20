@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const Album = require("./models/album");
+const album = require("./models/album");
 
 const app = express();
 
@@ -27,18 +28,51 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post
-  ("/my-family-network/albums",
-  (req, res, next) => {
-    const album = new Album({
-      ...req.body,
-    });
-    album
-      .save()
-      .then(() => res.status(201).json({ message: "Album créé avec succès !" }))
-      .catch((error) => res.status(400).json({ error }));
+// Add an album:
+app.post("/my-family-network/albums", (req, res, next) => {
+  const album = new Album({
+    ...req.body,
   });
+  album
+    .save()
+    .then(() => res.status(201).json({ message: "Album créé avec succès !" }))
+    .catch((error) => res.status(400).json({ error }));
+});
 
+// Get album by id :
+app.get("/my-family-network/albums/album/:id", (req, res, next) => {
+  Album.findOne({ _id: req.params.id })
+    .then((album) => res.status(200).json({ album }))
+    .catch((error) => res.status(404).json({ error }));
+});
+
+// PUT - Update one album :
+app.put("/my-family-network/albums/album/:id", (req, res, next) => {
+  Album.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
+    .then(() =>
+      res.status(200).json({ message: "Album mis à jour avec succès !" })
+    )
+    .catch((error) =>
+      res
+        .status(404)
+        .json({ error, message: "Erreur lors de la mise à jour de l'album ❗" })
+    );
+});
+
+// Delete an album :
+app.delete("/my-family-network/albums/album/:id", (req, res, next) => {
+  Album.deleteOne({ _id: req.params.id })
+    .then(() => {
+      res.status(200).json({ message: "Album supprimé avec succès !" });
+    })
+    .catch((error) =>
+      res
+        .json(400)
+        .json({ error, message: "Erreur lors de la suppression de l'album ❗" })
+    );
+});
+
+// Get all albums :
 app.get("/my-family-network/albums", (req, res, next) => {
   Album.find()
     .then((albums) => res.status(200).json(albums))
