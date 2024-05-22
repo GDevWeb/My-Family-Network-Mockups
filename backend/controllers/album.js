@@ -1,6 +1,5 @@
 const Album = require("../models/album");
-const getCreatingDate = require("../utils/getCreatingDate")
-
+const getCreatingDate = require("../utils/getCreatingDate");
 
 exports.createAlbum = (req, res, next) => {
   const album = new Album({
@@ -35,7 +34,12 @@ exports.getOneAlbum = (req, res, next) => {
 };
 
 exports.modifyAlbum = (req, res, next) => {
-  Album.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
+  const updateData = {
+    ...req.body,
+    _id: req.body.id,
+    albumUpdate: getCreatingDate(),
+  };
+  Album.updateOne({ _id: req.params.id }, updateData)
     .then(() =>
       res.status(200).json({ message: "Album mis à jour avec succès !" })
     )
