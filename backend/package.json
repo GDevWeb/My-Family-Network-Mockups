@@ -9,8 +9,10 @@
   "author": "Gaëtan Dammaretz - GDevWeb",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "express": "^4.19.2",
     "mongoose": "^8.4.0",
+    "mongoose-unique-validator": "^5.0.0",
     "nodemon": "^3.1.0"
   }
 }
