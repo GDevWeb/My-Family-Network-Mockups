@@ -1,24 +1,15 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
-const emailRegex = require("../utils/regexMail");
+const validatorPackage = require("validator");
 
 const userSchema = mongoose.Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  age: { type: Number, required: true },
-  email: {
+  firstName: {
     type: String,
-    required: true,
+    required: [true, "Veuille saisir votre prénom"],
     unique: true,
-    validate: {
-      validator: function (email) {
-        return emailRegex.test(email);
-      },
-      message: (props) =>
-        `${props.value} ce n'est pas une adresse mail valide!`,
-    },
   },
-  password: { type: String, required: true },
+  lastName: { type: String, required: [true, "Veuille saisir votre nom"] },
+  age: { type: Number, required: [true, "Veuille saisir votre âge"] },
   grade: {
     type: String,
     enum: [
@@ -36,6 +27,22 @@ const userSchema = mongoose.Schema({
     ],
     default: "membre",
     required: true,
+  },
+  email: {
+    type: String,
+    required: [true, "Une adresse mail est requise !"],
+    unique: true,
+    validate: {
+      validator: validatorPackage.isEmail,
+      message: "Veuillez saisir une adresse mail valide!",
+    },
+  },
+  password: { type: String, required: true },
+  role: {
+    type: String,
+    enum: ["utilisateur", "modérateur", "administrateur"],
+    default: "user",
+    required: false,
   },
 });
 
