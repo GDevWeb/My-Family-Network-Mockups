@@ -31,5 +31,6 @@ app.use((req, res, next) => {
 
 app.use("/my-family-network/api/album", albumRoutes);
 app.use("/my-family-network/api/auth", userRoutes);
+app.use("/my-family-network/api/admin", userRoutes);
 
 module.exports = app;
