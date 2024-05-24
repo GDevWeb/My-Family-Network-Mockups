@@ -35,6 +35,12 @@ exports.modifyAlbum = (req, res, next) => {
     _id: req.body.id,
     albumUpdate: getCreatingDate(),
   };
+  if (req.file) {
+    updateData.albumPicture = `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`;
+  }
+
   Album.updateOne({ _id: req.params.id }, updateData)
     .then(() =>
       res.status(200).json({ message: "Album mis à jour avec succès !" })
