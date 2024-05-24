@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const albumRoutes = require("./routes/album");
 const userRoutes = require("./routes/user");
 
+const path = require("path");
+
 const app = express();
 
 mongoose
@@ -31,6 +33,6 @@ app.use((req, res, next) => {
 
 app.use("/my-family-network/api/album", albumRoutes);
 app.use("/my-family-network/api/auth", userRoutes);
-// app.use("/my-family-network/api/admin", adminRoutes);
+app.use("/images/", express.static(path.join(__dirname, "images")));
 
 module.exports = app;

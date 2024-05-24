@@ -1,23 +1,23 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../middleware/auth");
+const multer = require("../middleware/multer-config");
 const albumCtrl = require("../controllers/album");
 
-
 /* Album routes */
-// Add an album:
-router.post("/", albumCtrl.createAlbum);
-// Get album by id :
-router.get("/:id", albumCtrl.getOneAlbum);
-// PUT - Update one album :
-router.put("/:id", albumCtrl.modifyAlbum);
-// Delete an album :
-router.delete("/:id", albumCtrl.deleteAlbum);
-// Delete one article :
-router.delete("/album/:id", albumCtrl.deletePost);
 // Get all albums :
-router.get("/", albumCtrl.getAllAlbums);
+router.get("/", auth, albumCtrl.getAllAlbums);
+// Add an album:
+router.post("/", auth, multer,albumCtrl.createAlbum);
+// Get album by id :
+router.get("/:id", auth, albumCtrl.getOneAlbum);
+// PUT - Update one album :
+router.put("/:id", auth, multer, albumCtrl.modifyAlbum);
+// Delete an album :
+router.delete("/:id", auth, albumCtrl.deleteAlbum);
+// Delete one article :
+router.delete("/album/:id", auth, albumCtrl.deletePost);
 
 /* Articles routes */
-
 
 module.exports = router;

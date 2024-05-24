@@ -2,29 +2,25 @@ const Album = require("../models/album");
 const getCreatingDate = require("../utils/getCreatingDate");
 
 exports.createAlbum = (req, res, next) => {
+  const albumData = req.body;
+  delete albumData._id;
+
   const album = new Album({
-    albumPicture: req.body.albumPicture,
-    albumName: req.body.albumName,
-    albumDescription: req.body.albumDescription,
-    albumLink: req.body.albumLink,
-    albumListPictures: req.body.albumListPicture,
-    albumAuthor: req.body.albumAuthor,
+    ...albumData,
     albumDate: getCreatingDate(),
-    albumUpdate: req.body.albumUpdate,
-    albumLike: req.body.albumLike,
-    albumShare: req.body.albumShare,
+    albumPicture: `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`,
   });
 
   album
     .save()
-    .then(() => {
-      res.status(201).json({ message: "Album créé avec succès" });
-    })
-    .catch((error) => {
+    .then(() => res.status(201).json({ message: "Album créé avec succès" }))
+    .catch((error) =>
       res
         .status(400)
-        .json({ error, message: "Erreur lors de la création de l'album !" });
-    });
+        .json({ error, message: "Erreur lors de la création de l'album !" })
+    );
 };
 
 exports.getOneAlbum = (req, res, next) => {
