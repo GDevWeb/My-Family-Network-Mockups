@@ -4,28 +4,21 @@ const getCreatingDate = require("../utils/getCreatingDate");
 
 exports.createAlbum = (req, res, next) => {
   const albumData = req.body;
-  console.log(albumData._id);
-  console.log(albumData._userId);
-  delete albumData._id; //suppression de l'id de l'article de la bdd
-  delete albumData._userId; //suppression de l'id de user
+  delete albumData._id; // suppression de l'id de l'article de la bdd
+  delete albumData._userId; // suppression de l'id de user
 
   const album = new Album({
     ...albumData,
     userId: req.auth.userId,
-    albumPicture: `${req.protocol}://${req.get("host")}/images/${
-      req.file.filename
-    }`,
-    albumAuthor: req.body.firstName,
+    albumAuthor: req.auth.firstName,
+    albumPicture: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
     albumDate: getCreatingDate(),
   });
 
-  album
-    .save()
+  album.save()
     .then(() => res.status(201).json({ message: "Album créé avec succès" }))
     .catch((error) =>
-      res
-        .status(400)
-        .json({ error, message: "Erreur lors de la création de l'album !" })
+      res.status(400).json({ error, message: "Erreur lors de la création de l'album !" })
     );
 };
 
@@ -54,7 +47,7 @@ exports.modifyAlbum = (req, res, next) => {
     .catch((error) =>
       res
         .status(404)
-        .json({ error, message: "Erreur lors de la mise à jour de l'album ❗" })
+        .json({ error})
     );
 };
 

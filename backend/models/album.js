@@ -9,9 +9,8 @@ const albumSchema = mongoose.Schema({
   albumListPictures: { type: String, required: false },
   // Extras :
   albumAuthor: { type: String, required: false},
-  albumDate: { type: String, required: true }, //à modifier - ajouter une fonction date getNow à la création et modification
+  albumDate: { type: String, required: true }, 
   albumUpdate: { type: String, required: false },
-  //à modifier - ajouter une fonction date getNow à la création et modification
   albumLike: { type: Number, required: false },
   //passer une route/fonction
   albumShare: { type: Number, required: false },
