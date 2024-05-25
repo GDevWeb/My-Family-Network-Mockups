@@ -1,16 +1,22 @@
+const fs = require("fs");
 const Album = require("../models/album");
 const getCreatingDate = require("../utils/getCreatingDate");
 
 exports.createAlbum = (req, res, next) => {
   const albumData = req.body;
-  delete albumData._id;
+  console.log(albumData._id);
+  console.log(albumData._userId);
+  delete albumData._id; //suppression de l'id de l'article de la bdd
+  delete albumData._userId; //suppression de l'id de user
 
   const album = new Album({
     ...albumData,
-    albumDate: getCreatingDate(),
+    userId: req.auth.userId,
     albumPicture: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
     }`,
+    albumAuthor: req.body.firstName,
+    albumDate: getCreatingDate(),
   });
 
   album
@@ -53,32 +59,39 @@ exports.modifyAlbum = (req, res, next) => {
 };
 
 exports.deleteAlbum = (req, res, next) => {
-  Album.deleteOne({ _id: req.params.id })
-    .then(() => {
-      res.status(200).json({ message: "Album supprimé avec succès !" });
+  Album.findOne({ _id: req.params.id })
+    .then((album) => {
+      if (!album) {
+        return res.status(404).json({ message: "Album non trouvé" });
+      }
+      if (album._id != req.auth.userId) {
+        return res.status(401).json({ message: "Opération non autorisée" });
+      }
+      const filename = album.albumPicture.split("/images/")[1];
+      fs.unlink(`images/${filename}`, (err) => {
+        if (err) {
+          return res
+            .status(500)
+            .json({ error: "Erreur lors de la suppression de l'image" });
+        }
+        Album.deleteOne({ _id: req.params.id })
+          .then(() => res.status(200).json({ message: "Album supprimé !" }))
+          .catch((error) => res.status(400).json({ error }));
+      });
     })
-    .catch((error) =>
-      res
-        .json(400)
-        .json({ error, message: "Erreur lors de la suppression de l'album ❗" })
-    );
-};
-
-// Route à tester et vérifier voir créer un nouveau fichier post_routes et controllers pour les articles.
-exports.deletePost = (req, res, next) => {
-  Album.deleteOne({ _id: req.params.id })
-    .then(() => {
-      res.status(200).json({ message: "Album supprimé avec succès !" });
-    })
-    .catch((error) =>
-      res
-        .json(400)
-        .json({ error, message: "Erreur lors de la suppression de l'album ❗" })
-    );
+    .catch((error) => res.status(500).json({ error }));
 };
 
 exports.getAllAlbums = (req, res, next) => {
   Album.find()
-    .then((albums) => res.status(200).json(albums))
+    .then((albums) => {
+      if (albums.length === 0) {
+        return res
+          .status(200)
+          .json({ message: "La liste des albums est vide !" });
+      } else {
+        return res.status(200).json(albums);
+      }
+    })
     .catch((error) => res.status(400).json({ error }));
 };

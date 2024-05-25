@@ -1,13 +1,14 @@
 const mongoose = require("mongoose");
 
 const albumSchema = mongoose.Schema({
+  userId: { type: String, required: false },
   albumPicture: { type: String, required: true },
   albumName: { type: String, required: true, unique: true },
   albumDescription: { type: String, required: true },
   albumLink: { type: String, required: true },
   albumListPictures: { type: String, required: false },
   // Extras :
-  albumAuthor: { type: String, required: true },
+  albumAuthor: { type: String, required: false},
   albumDate: { type: String, required: true }, //à modifier - ajouter une fonction date getNow à la création et modification
   albumUpdate: { type: String, required: false },
   //à modifier - ajouter une fonction date getNow à la création et modification
@@ -18,3 +19,5 @@ const albumSchema = mongoose.Schema({
 });
 
 module.exports = mongoose.model("Album", albumSchema);
+
+/* Vérifier si je récupère bien l'id de l'auteur pour l'édition et suppression  */

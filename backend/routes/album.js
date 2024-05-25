@@ -15,8 +15,6 @@ router.get("/:id", auth, albumCtrl.getOneAlbum);
 router.put("/:id", auth, multer, albumCtrl.modifyAlbum);
 // Delete an album :
 router.delete("/:id", auth, albumCtrl.deleteAlbum);
-// Delete one article :
-router.delete("/album/:id", auth, albumCtrl.deletePost);
 
 /* Articles routes */
 
