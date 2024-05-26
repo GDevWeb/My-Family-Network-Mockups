@@ -1,6 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const Album = require("./models/album");
+
+const albumRoutes = require("./routes/album");
+const userRoutes = require("./routes/user");
+
+const path = require("path");
 
 const app = express();
 
@@ -27,22 +31,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post
-  ("/my-family-network/albums",
-  (req, res, next) => {
-    const album = new Album({
-      ...req.body,
-    });
-    album
-      .save()
-      .then(() => res.status(201).json({ message: "Album créé avec succès !" }))
-      .catch((error) => res.status(400).json({ error }));
-  });
-
-app.get("/my-family-network/albums", (req, res, next) => {
-  Album.find()
-    .then((albums) => res.status(200).json(albums))
-    .catch((error) => res.status(400).json({ error }));
-});
+app.use("/my-family-network/api/album", albumRoutes);
+app.use("/my-family-network/api/auth", userRoutes);
+app.use("/images/", express.static(path.join(__dirname, "images")));
 
 module.exports = app;
