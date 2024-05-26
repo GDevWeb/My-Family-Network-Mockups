@@ -51,13 +51,14 @@ exports.modifyAlbum = (req, res, next) => {
     );
 };
 
+// test de la route via auth userID validé le 26/05/24
 exports.deleteAlbum = (req, res, next) => {
   Album.findOne({ _id: req.params.id })
     .then((album) => {
       if (!album) {
         return res.status(404).json({ message: "Album non trouvé" });
       }
-      if (album._id != req.auth.userId) {
+      if (album.userId !== req.auth.userId) {
         return res.status(401).json({ message: "Opération non autorisée" });
       }
       const filename = album.albumPicture.split("/images/")[1];
@@ -88,3 +89,6 @@ exports.getAllAlbums = (req, res, next) => {
     })
     .catch((error) => res.status(400).json({ error }));
 };
+
+
+/* Ajouter vérification id pour put et delete */
