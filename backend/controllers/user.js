@@ -14,7 +14,7 @@ exports.signup = (req, res, next) => {
         email: req.body.email,
         password: hash,
       });
-      user
+     user
         .save()
         .then(() =>
           res.status(200).json({ message: "Compte créé avec succès" })

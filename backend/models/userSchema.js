@@ -5,11 +5,23 @@ const validatorPackage = require("validator");
 const userSchema = mongoose.Schema({
   firstName: {
     type: String,
+    minlength: [3, "le prénom est trop court, 3 caractères minimum"],
+    maxlength: [64, "le prénom est trop long, 64 caractères maximum"],
     required: [true, "Veuille saisir votre prénom"],
-    unique: true,
+    unique: [true, "Ce prénom est déjà utilisé"],
   },
-  lastName: { type: String, required: [true, "Veuille saisir votre nom"] },
-  age: { type: Number, required: [true, "Veuille saisir votre âge"] },
+  lastName: {
+    type: String,
+    minlength: [3, "le nom est trop court, 3 caractères minimum"],
+    maxlength: [64, "le nom est trop long, 64 caractères maximum"],
+    required: [true, "Veuille saisir votre nom"],
+  },
+  age: {
+    type: Number,
+    required: [true, "Veuille saisir votre âge"],
+    min: [3, "L'âge minimum est de 3 ans"],
+    max: [100, "L'âge maximum est de 100 ans"],
+  },
   grade: {
     type: String,
     enum: [
