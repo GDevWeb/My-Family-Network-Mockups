@@ -5,20 +5,20 @@ const validatorPackage = require("validator");
 const userSchema = mongoose.Schema({
   firstName: {
     type: String,
-    minlength: [3, "le prénom est trop court, 3 caractères minimum"],
-    maxlength: [64, "le prénom est trop long, 64 caractères maximum"],
-    required: [true, "Veuille saisir votre prénom"],
+    minlength: [3, "Le prénom est trop court, 3 caractères minimum"],
+    maxlength: [64, "Le prénom est trop long, 64 caractères maximum"],
+    required: [true, "Veuillez saisir votre prénom"],
     unique: [true, "Ce prénom est déjà utilisé"],
   },
   lastName: {
     type: String,
-    minlength: [3, "le nom est trop court, 3 caractères minimum"],
-    maxlength: [64, "le nom est trop long, 64 caractères maximum"],
-    required: [true, "Veuille saisir votre nom"],
+    minlength: [3, "Le nom est trop court, 3 caractères minimum"],
+    maxlength: [64, "Le nom est trop long, 64 caractères maximum"],
+    required: [true, "Veuillez saisir votre nom"],
   },
   age: {
     type: Number,
-    required: [true, "Veuille saisir votre âge"],
+    required: [true, "Veuillez saisir votre âge"],
     min: [3, "L'âge minimum est de 3 ans"],
     max: [100, "L'âge maximum est de 100 ans"],
   },
@@ -58,6 +58,7 @@ const userSchema = mongoose.Schema({
   },
 });
 
-userSchema.plugin(uniqueValidator);
+// Configuration du plugin uniqueValidator avec des messages personnalisés
+userSchema.plugin(uniqueValidator, { message: "{PATH} est déjà utilisé." });
 
 module.exports = mongoose.model("User", userSchema);
